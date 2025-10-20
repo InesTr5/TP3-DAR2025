@@ -11,7 +11,7 @@ public class ClientMulti {
 
         try (Socket socket = new Socket(hote, port);
              BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+             PrintWriter out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
              Scanner sc = new Scanner(System.in)) {
 
             System.out.println("Connecté au serveur " + hote + " sur le port " + port);
@@ -21,14 +21,17 @@ public class ClientMulti {
                 System.out.print("Message à envoyer ('exit' pour quitter) : ");
                 String msg = sc.nextLine();
                 out.println(msg);
-                if (msg.equalsIgnoreCase("exit")) break;
+
+                if (msg.trim().equalsIgnoreCase("exit")) break;
 
                 String reponse = in.readLine();
-                System.out.println("→ Réponse du serveur : " + reponse);
+                System.out.println("Réponse du serveur : " + reponse);
             }
 
+            System.out.println("Déconnexion du serveur...");
+
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Erreur client : " + e.getMessage());
         }
     }
 }

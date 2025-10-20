@@ -15,26 +15,27 @@ public class ClientProcess extends Thread {
     public void run() {
         try (
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true)
+            PrintWriter out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true)
         ) {
             out.println("Bienvenue, vous êtes le client n°" + nb);
 
             String message;
             while ((message = in.readLine()) != null) {
-                if (message.equalsIgnoreCase("exit")) break;
+                if (message.trim().equalsIgnoreCase("exit")) break;
+
                 System.out.println("Message du client " + nb + ": " + message);
-                out.println("Serveur → Reçu : " + message.toUpperCase());
+                out.println("Serveur → Reçu (" + nb + ") : " + message.toUpperCase());
             }
 
             System.out.println("Client n°" + nb + " déconnecté.");
 
         } catch (IOException e) {
-            System.out.println("Erreur avec le client n°" + nb);
+            System.err.println("Erreur avec le client n°" + nb + " : " + e.getMessage());
         } finally {
             try {
                 socket.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                System.err.println("Erreur de fermeture du socket client " + nb);
             }
         }
     }

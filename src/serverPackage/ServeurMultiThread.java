@@ -18,10 +18,10 @@ public class ServeurMultiThread {
                 System.out.println("Client n°" + nb + " connecté depuis " + socket.getRemoteSocketAddress());
 
                 ClientProcess clientProcess = new ClientProcess(socket, nb);
-				clientProcess.start();
+                clientProcess.start();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Erreur serveur : " + e.getMessage());
         }
     }
 }
